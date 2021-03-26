@@ -1,0 +1,22 @@
+{
+  "name": "lit/parameter",
+  "description": "函数参数验证器",
+  "authors": [
+    {
+      "name": "litong",
+      "email": "ghostong@126.com"
+    }
+  ],
+  "keywords": [
+  ],
+  "require": {
+    "php": ">=5.4.0"
+  },
+  "minimum-stability": "stable",
+  "autoload": {
+    "files": [],
+    "psr-4": {
+      "Lit\\Parameter\\": "src"
+    }
+  }
+}
