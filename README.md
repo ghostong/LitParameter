@@ -41,26 +41,27 @@ function testFunction($bookId, $bookName, $bookTags, $bookDesc) {
 testFunction(1234,"abcd",["id"=>890,"name"=>"xyz","target"=>"abc","bug1"=>"bug1"],"opqrst");
 
 //打印结果
-//int(1008) // paramChecker::getCode() 错误代码
-//string(14) "书籍ID错误" // paramChecker::getMsg() 错误信息
-//array(6) {
-//  ["expect"]=> //预期值
-//  array(2) {
-//    [0]=>
-//    int(5)
-//    [1]=>
-//    int(10)
-//  }
-//  ["actual"]=> //实际传入
-//  int(1234)
-//  ["function"]=> //未验证成功规则
-//  string(7) "between"
-//  ["errorCode"]=> //错误码
-//  int(1008)
-//  ["errorMsg"]=> //错误信息 
-//  string(14) "书籍ID错误"
-//  ["message"]=> //完整错误
-//  string(99) "Parameter "bookId" check error on "between",  expect: "array (  0 => 5,  1 => 10,)", actual: "1234""
-//}
-
+/*
+int(1008) // paramChecker::getCode() 错误代码
+string(14) "书籍ID错误" // paramChecker::getMsg() 错误信息
+array(6) {
+  ["expect"]=> //预期值
+  array(2) {
+    [0]=>
+    int(5)
+    [1]=>
+    int(10)
+  }
+  ["actual"]=> //实际传入
+  int(1234)
+  ["function"]=> //未验证成功规则
+  string(7) "between"
+  ["errorCode"]=> //错误码
+  int(1008)
+  ["errorMsg"]=> //错误信息 
+  string(14) "书籍ID错误"
+  ["message"]=> //完整错误
+  string(99) "Parameter "bookId" check error on "between",  expect: "array (  0 => 5,  1 => 10,)", actual: "1234""
+}
+*/
 ````
