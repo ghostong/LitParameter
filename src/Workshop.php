@@ -12,12 +12,20 @@ class Workshop
         return is_string($value);
     }
 
+    public static function isArray($value) {
+        return is_array($value);
+    }
+
     public static function notNull($value) {
         return null !== $value;
     }
 
     public static function notEmpty($value) {
         return !empty($value);
+    }
+
+    public static function callback($value, $callback) {
+        return call_user_func($callback, $value);
     }
 
     public static function length($value, $length) {
@@ -56,4 +64,19 @@ class Workshop
         return $value <= $number;
     }
 
+    public static function minSize($value, $size) {
+        return count($value) >= $size;
+    }
+
+    public static function maxSize($value, $size) {
+        return count($value) <= $size;
+    }
+
+    public static function incFields($value, $fields) {
+        return empty(array_diff_key(array_flip($fields), $value));
+    }
+
+    public static function excFields($value, $fields) {
+        return !empty(array_diff_key(array_flip($fields), $value));
+    }
 }

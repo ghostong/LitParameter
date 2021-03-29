@@ -48,17 +48,17 @@ class Checker
         return self::$debug;
     }
 
-    public static function check($args) {
+    public static function check($params) {
         if (self::$calledClass === null) {
             $called = get_called_class();
             self::$calledClass = new $called;
         }
-        $params = self::$calledClass->getParameters();
-        foreach ($args as $name => $value) {
-            if (isset($params[$name]) && $checker = $params[$name]) {
+        $userParams = self::$calledClass->getParameters();
+        foreach ($params as $name => $value) {
+            if (isset($userParams[$name]) && $checker = $userParams[$name]) {
                 foreach ($checker->getChecker() as $func => $arg) {
                     if (!call_user_func_array(array(__NAMESPACE__ . '\Workshop', $func), [$value, $arg])) {
-                        self::setErrorMsg($checker->getCode(), $checker->getMsg(), "[" . $name . "]" . " check error [" . $func . "] expect : " . (is_array($arg) ? implode(",", $arg) : $arg));
+                        self::errorBuild($checker->getCode(), $checker->getMsg(), $name, $func, $value, $arg);
                         return false;
                     }
                 }
@@ -69,6 +69,18 @@ class Checker
 
     private function getParameters() {
         return $this->parameters;
+    }
+
+    private static function errorBuild($code, $msg, $param, $func, $actual, $expect) {
+        $debug["expect"] = $expect;
+        $debug["actual"] = $actual;
+        $debug["function"] = $func;
+        $debug["errorCode"] = $code;
+        $debug["errorMsg"] = $msg;
+        $expect = str_replace("\n", "", var_export($expect, true));
+        $actual = str_replace("\n", "", var_export($actual, true));
+        $debug["message"] = sprintf("Parameter \"%s\" check error on \"%s\",  expect: \"%s\", actual: \"%s\"", $param, $func, $expect, $actual);
+        self::setErrorMsg($code, $msg, $debug);
     }
 
     private static function setErrorMsg($code, $msg, $debug) {

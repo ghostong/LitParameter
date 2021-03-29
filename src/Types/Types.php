@@ -18,12 +18,17 @@ class Types
         return $this;
     }
 
-    public function code($code) {
+    public function setCode($code) {
         $this->errorCode = $code;
         return $this;
     }
 
-    public function msg($msg) {
+    public function callback($callback) {
+        $this->setChecker(__FUNCTION__, $callback);
+        return $this;
+    }
+
+    public function setMsg($msg) {
         $this->errorMsg = $msg;
         return $this;
     }
