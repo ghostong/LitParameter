@@ -22,7 +22,7 @@ class Checker
         return $this->parameters[$param];
     }
 
-    public function IsNumber($param) {
+    public function isNumber($param) {
         if (!isset($this->parameters[$param])) {
             $this->parameters[$param] = new IsNumber();
         }
