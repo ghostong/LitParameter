@@ -4,8 +4,8 @@ namespace Lit\Parameter;
 
 class Workshop
 {
-    public static function IsInt($value) {
-        return is_int($value);
+    public static function isNumber($value) {
+        return is_int($value) || is_float($value);
     }
 
     public static function isString($value) {

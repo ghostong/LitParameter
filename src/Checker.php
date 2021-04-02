@@ -3,7 +3,7 @@
 namespace Lit\Parameter;
 
 use Lit\Parameter\Types\IsArray;
-use Lit\Parameter\Types\IsInt;
+use Lit\Parameter\Types\IsNumber;
 use Lit\Parameter\Types\IsString;
 
 class Checker
@@ -22,9 +22,9 @@ class Checker
         return $this->parameters[$param];
     }
 
-    public function isInt($param) {
+    public function IsNumber($param) {
         if (!isset($this->parameters[$param])) {
-            $this->parameters[$param] = new IsInt();
+            $this->parameters[$param] = new IsNumber();
         }
         return $this->parameters[$param];
     }
