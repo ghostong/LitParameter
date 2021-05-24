@@ -16,6 +16,10 @@ class Workshop
         return is_array($value);
     }
 
+    public static function isNumeric($value) {
+        return is_numeric($value);
+    }
+
     public static function notNull($value) {
         return null !== $value;
     }

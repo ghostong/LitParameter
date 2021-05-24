@@ -4,6 +4,7 @@ namespace Lit\Parameter;
 
 use Lit\Parameter\Types\IsArray;
 use Lit\Parameter\Types\IsNumber;
+use Lit\Parameter\Types\IsNumeric;
 use Lit\Parameter\Types\IsString;
 
 class Checker
@@ -32,6 +33,13 @@ class Checker
     public function isArray($param) {
         if (!isset($this->parameters[$param])) {
             $this->parameters[$param] = new IsArray();
+        }
+        return $this->parameters[$param];
+    }
+
+    public function isNumeric($param) {
+        if (!isset($this->parameters[$param])) {
+            $this->parameters[$param] = new IsNumeric();
         }
         return $this->parameters[$param];
     }
