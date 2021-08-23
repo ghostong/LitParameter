@@ -12,9 +12,9 @@ class Checker
 
     private $parameters = [];
     private static $calledClass = null;
-    private static $code = null;
-    private static $msg = null;
-    private static $debug = null;
+    private static $code = 0;
+    private static $msg = "";
+    private static $debug = [];
 
     public function isString($param) {
         if (!isset($this->parameters[$param])) {
@@ -44,18 +44,43 @@ class Checker
         return $this->parameters[$param];
     }
 
+    /**
+     * 获取错误码
+     * @date 2021/8/23
+     * @return int
+     * @author litong
+     */
     public static function getCode() {
         return self::$code;
     }
 
+    /**
+     * 获取错误提示
+     * @date 2021/8/23
+     * @return string
+     * @author litong
+     */
     public static function getMsg() {
         return self::$msg;
     }
 
+    /**
+     * 获取调试信息
+     * @date 2021/8/23
+     * @return array
+     * @author litong
+     */
     public static function debug() {
         return self::$debug;
     }
 
+    /**
+     * 执行参数校验
+     * @date 2021/8/23
+     * @param array $params 要验证的参数
+     * @return bool
+     * @author litong
+     */
     public static function check($params) {
         if (self::$calledClass === null) {
             $called = get_called_class();

@@ -31,7 +31,7 @@ class IsNumber extends Types implements InterfaceTypes
     }
 
     /**
-     * 小于
+     * 大于
      * @param int $number 数字
      * @return IsNumber
      */
@@ -41,7 +41,7 @@ class IsNumber extends Types implements InterfaceTypes
     }
 
     /**
-     * 大于
+     * 小于
      * @param int $number 数字
      * @return IsNumber
      */
@@ -51,7 +51,7 @@ class IsNumber extends Types implements InterfaceTypes
     }
 
     /**
-     * 小于等于
+     * 大于等于
      * @param int $number 数字
      * @return IsNumber
      */
@@ -61,7 +61,7 @@ class IsNumber extends Types implements InterfaceTypes
     }
 
     /**
-     * 大于等于
+     * 小于等于
      * @param int $number 数字
      * @return IsNumber
      */
