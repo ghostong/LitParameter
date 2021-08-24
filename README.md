@@ -25,8 +25,10 @@ class paramChecker extends \Lit\Parameter\Checker
         $this->isString("bookDesc")->callback(function ($desc) {
             return strlen($desc) == 1;
         })->setCode(1010)->setMsg("desc 错误");
+        //初始化一个数字或数字字符串
+        $this->isNumeric("book_id")->in([1, 2, "1", "2"]);
     }
-    
+
 }
 ````
 

@@ -48,7 +48,6 @@ class Checker
      * 获取错误码
      * @date 2021/8/23
      * @return int
-     * @author litong
      */
     public static function getCode() {
         return self::$code;
@@ -58,7 +57,6 @@ class Checker
      * 获取错误提示
      * @date 2021/8/23
      * @return string
-     * @author litong
      */
     public static function getMsg() {
         return self::$msg;
@@ -68,7 +66,6 @@ class Checker
      * 获取调试信息
      * @date 2021/8/23
      * @return array
-     * @author litong
      */
     public static function debug() {
         return self::$debug;
@@ -79,7 +76,6 @@ class Checker
      * @date 2021/8/23
      * @param array $params 要验证的参数
      * @return bool
-     * @author litong
      */
     public static function check($params) {
         if (self::$calledClass === null) {
