@@ -16,6 +16,13 @@ class Checker
     private static $msg = "";
     private static $debug = [];
 
+    /**
+     * 字符串构造器
+     * @date 2021/9/29
+     * @param $param
+     * @return IsString
+     * @author litong
+     */
     public function isString($param) {
         if (!isset($this->parameters[$param])) {
             $this->parameters[$param] = new IsString();
@@ -23,6 +30,13 @@ class Checker
         return $this->parameters[$param];
     }
 
+    /**
+     * 数字构造器
+     * @date 2021/9/29
+     * @param $param
+     * @return IsNumber
+     * @author litong
+     */
     public function isNumber($param) {
         if (!isset($this->parameters[$param])) {
             $this->parameters[$param] = new IsNumber();
@@ -30,6 +44,13 @@ class Checker
         return $this->parameters[$param];
     }
 
+    /**
+     * 数组构造器
+     * @date 2021/9/29
+     * @param $param
+     * @return IsArray
+     * @author litong
+     */
     public function isArray($param) {
         if (!isset($this->parameters[$param])) {
             $this->parameters[$param] = new IsArray();
@@ -37,6 +58,13 @@ class Checker
         return $this->parameters[$param];
     }
 
+    /**
+     * 数值构造器
+     * @date 2021/9/29
+     * @param $param
+     * @return IsNumeric
+     * @author litong
+     */
     public function isNumeric($param) {
         if (!isset($this->parameters[$param])) {
             $this->parameters[$param] = new IsNumeric();
