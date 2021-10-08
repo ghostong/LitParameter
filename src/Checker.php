@@ -106,10 +106,8 @@ class Checker
      * @return bool
      */
     public static function check($params) {
-        if (self::$calledClass === null) {
-            $called = get_called_class();
-            self::$calledClass = new $called;
-        }
+        $called = get_called_class();
+        self::$calledClass = new $called;
         $userParams = self::$calledClass->getParameters();
         foreach ($params as $name => $value) {
             if (isset($userParams[$name]) && $checker = $userParams[$name]) {
