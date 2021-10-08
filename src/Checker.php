@@ -11,7 +11,7 @@ class Checker
 {
 
     private $parameters = [];
-    private static $calledClass = null;
+    private static $calledClass = [];
     private static $code = 0;
     private static $msg = "";
     private static $debug = [];
@@ -107,8 +107,10 @@ class Checker
      */
     public static function check($params) {
         $called = get_called_class();
-        self::$calledClass = new $called;
-        $userParams = self::$calledClass->getParameters();
+        if (!isset(self::$calledClass[$called])) {
+            self::$calledClass[$called] = new $called;
+        }
+        $userParams = self::$calledClass[$called]->getParameters();
         foreach ($params as $name => $value) {
             if (isset($userParams[$name]) && $checker = $userParams[$name]) {
                 foreach ($checker->getChecker() as $func => $arg) {
