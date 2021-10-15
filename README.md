@@ -7,7 +7,7 @@
 ## 初始化
 
 ````php
-class paramChecker extends \Lit\Parameter\Checker
+class ParamChecker extends \Lit\Parameter\Checker
 {
 
     public function __construct() {
@@ -34,45 +34,69 @@ class paramChecker extends \Lit\Parameter\Checker
 
 ## 使用方法
 
+### 使用验证器
+
+#### 验证一个数组
+
 ````php
-//业务中写了个函数或者类方法, 保证要验证的形参已经编写过规则. (参考初始化)
-function testFunction($bookId, $bookName, $bookTags, $bookDesc) {
-    if (!paramChecker::check(get_defined_vars())) { //如果验证失败
-        var_dump(paramChecker::getCode()); //上一步设置的错误代码
-        var_dump(paramChecker::getMsg()); //上一步设置的错误信息
-        var_dump(paramChecker::debug()); //调试信息
+ParamChecker::check($param, $must) : array
+ - $param 验证的参数数组
+ - $must  指定必填参数(选填)
+````
+
+#### 如果失败获取上一步设置的错误代码
+
+````php
+ParamChecker::getCode(): int
+````
+
+#### 获取上一步(设置)的验证失败代码
+
+````php
+ParamChecker::getMsg(): string
+````
+
+#### 获取上一步(设置)的验证失败信息
+
+````php
+ParamChecker::getMsg(): string
+````
+
+#### 获取上一步(设置)的验证失败调试信息
+
+````php
+ParamChecker::debug(): array
+````
+
+## 示例
+
+### 验证一个数组的有效性
+
+````php
+//验证一个数组是否符合规范, 保证要验证的形参已经编写过规则. (参考初始化)
+$array = ["bookTags"=>"tag","bookDesc"=>"desc"];
+if (ParamChecker::check($array,["bookId"])) { //如果验证失败
+    var_dump("验证成功");
+}else{
+    var_dump(ParamChecker::getCode(),ParamChecker::getMsg(),ParamChecker::debug()); //错误信息    
+}
+````
+
+### 验证一个函数参数的有效性
+
+````php
+//验证函数或者类方法, 保证要验证的形参已经编写过规则. (参考初始化)
+function test($bookId, $bookName, $bookTags, $bookDesc) {
+    if (!ParamChecker::check(get_defined_vars())) { //如果验证失败
+        var_dump(ParamChecker::getCode(),ParamChecker::getMsg(),ParamChecker::debug()); //调试信息
         return false;
     }
+    //正常业务逻辑
     return true;
 }
 
 //在调用时传入实参
-testFunction(1234,"abcd",["id"=>890,"name"=>"xyz","target"=>"abc","bug1"=>"bug1"],"opqrst");
-
-//打印结果
-/*
-int(1008) // paramChecker::getCode() 错误代码
-string(14) "书籍ID错误" // paramChecker::getMsg() 错误信息
-array(6) {
-  ["expect"]=> //预期值
-  array(2) {
-    [0]=>
-    int(5)
-    [1]=>
-    int(10)
-  }
-  ["actual"]=> //实际传入
-  int(1234)
-  ["function"]=> //未验证成功规则
-  string(7) "between"
-  ["errorCode"]=> //错误码
-  int(1008)
-  ["errorMsg"]=> //错误信息 
-  string(14) "书籍ID错误"
-  ["message"]=> //完整错误
-  string(99) "Parameter "bookId" check error on "between",  expect: "array (  0 => 5,  1 => 10,)", actual: "1234""
-}
-*/
+test(1234,"abcd",["id"=>890,"name"=>"xyz","target"=>"abc","bug1"=>"bug1"],"opqrst");
 ````
 
 ## 支持方法

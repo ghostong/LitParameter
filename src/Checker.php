@@ -105,11 +105,12 @@ class Checker
      * @param array $params 要验证的参数
      * @return bool
      */
-    public static function check($params) {
+    public static function check($params, $must = []) {
         $called = get_called_class();
         if (!isset(self::$calledClass[$called])) {
             self::$calledClass[$called] = new $called;
         }
+        $params = array_merge(array_fill_keys($must, null), $params);
         $userParams = self::$calledClass[$called]->getParameters();
         foreach ($params as $name => $value) {
             if (isset($userParams[$name]) && $checker = $userParams[$name]) {
