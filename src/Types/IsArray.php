@@ -4,6 +4,9 @@ namespace Lit\Parameter\Types;
 
 class IsArray extends Types implements InterfaceTypes
 {
+    public function __construct() {
+        $this->setChecker("isArray", true);
+    }
 
     /**
      * 数组最小元素数

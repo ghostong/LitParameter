@@ -114,9 +114,11 @@ class Checker
         $userParams = self::$calledClass[$called]->getParameters();
         foreach ($params as $name => $value) {
             if (isset($userParams[$name]) && $checker = $userParams[$name]) {
-                foreach ($checker->getChecker() as $func => $arg) {
-                    if (!call_user_func_array(array(__NAMESPACE__ . '\Workshop', $func), [$value, $arg])) {
-                        self::errorBuild($checker->getCode(), $checker->getMsg(), $name, $func, $value, $arg);
+                foreach ($checker->getChecker() as $allArgs) {
+                    $func = $allArgs["func"];
+                    $args = $allArgs["args"];
+                    if (!call_user_func_array(array(__NAMESPACE__ . '\Workshop', $func), [$value, $args])) {
+                        self::errorBuild($checker->getCode(), $checker->getMsg(), $name, $func, $value, $args);
                         return false;
                     }
                 }

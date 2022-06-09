@@ -74,7 +74,7 @@ class Types
     }
 
     protected function setChecker($check, $val) {
-        $this->checkData[$check] = $val;
+        $this->checkData[] = ["func" => $check, "args" => $val];
     }
 
     public function getChecker() {
