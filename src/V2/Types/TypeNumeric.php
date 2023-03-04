@@ -4,14 +4,14 @@
 namespace Lit\Parameter\V2\Types;
 
 
-class TypeInteger extends CommonNumeric
+class TypeNumeric extends CommonNumeric
 {
-    protected $valueType = "integer";
+    protected $valueType = "numeric";
 
     public function __construct($name) {
         $this->name = $name;
         $this->setWorkShop(function ($value) {
-            return is_int($value);
+            return is_numeric($value);
         });
         return $this;
     }

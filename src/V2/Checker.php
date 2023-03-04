@@ -4,25 +4,37 @@
 namespace Lit\Parameter\V2;
 
 
+use Lit\Parameter\V2\Types\TypeArray;
 use Lit\Parameter\V2\Types\TypeInteger;
 use Lit\Parameter\V2\Types\TypeMixed;
+use Lit\Parameter\V2\Types\TypeNumeric;
 use Lit\Parameter\V2\Types\Types;
 use Lit\Parameter\V2\Types\TypeString;
 
 class Checker
 {
 
-    protected static $typeCache = [];
-    protected $errCode = 0;
-    protected $errMsg = "";
-    protected $errName = null;
-    protected $errValue = null;
+    private static $typeCache = [];
+    private $errCode = 0;
+    private $errMsg = "";
+    private $errName = null;
+    private $errValue = null;
+
+    public function __construct($params = []) {
+        foreach ($params as $key => $value) {
+            $this->$key = $value;
+        }
+    }
 
     public function check($params = []) {
-        $params = empty($params) ? $this->getAttributes() : $params;
+        $params = empty($params) ? $this->getAssigned() : $params;
         foreach ($params as $name => $value) {
             /**
              * @var TypeInteger $typeObject
+             * @var TypeNumeric $typeObject
+             * @var TypeString $typeObject
+             * @var TypeArray $typeObject
+             * @var TypeMixed $typeObject
              */
             $typeObject = $this->typeCache($name)->getObject();
             if ($typeObject) {
@@ -32,6 +44,12 @@ class Checker
             }
         }
         return true;
+    }
+
+    public function getAssigned() {
+        return array_filter($this->getAttributes(), function ($v) {
+            return !is_null($v);
+        });
     }
 
     public function toArray() {
@@ -46,14 +64,14 @@ class Checker
         $this->typeCache($name)->getObject()->setValue($value);
     }
 
-    protected function typeCache($name) {
+    private function typeCache($name) {
         if (!(self::$typeCache[$name] instanceof Types)) {
             self::$typeCache[$name] = new Types($name);
         }
         return self::$typeCache[$name];
     }
 
-    protected function getAttributes() {
+    private function getAttributes() {
         $tmp = [];
         foreach (self::$typeCache as $key => $value) {
             $tmp[$key] = $value->getOBject()->getValue();
@@ -64,13 +82,18 @@ class Checker
     /**
      *
      * @date 2023/3/3
-     * @param TypeInteger|TypeString|TypeMixed $typeObject
+     * @param TypeInteger|TypeNumeric|TypeString|TypeArray|TypeMixed $typeObject
      * @param null $value
      * @return bool
      * @author litong
      */
-    protected function checkValue($typeObject, $value = null) {
+    private function checkValue($typeObject, $value = null) {
         foreach ($typeObject->getWorkShop() as $callback) {
+            if ("callback" == $typeObject->getName()) {
+//                var_dump($callback);
+//                var_dump(call_user_func($callback, $value ?: $typeObject->getValue()));
+//                exit;
+            }
             if (!call_user_func($callback, $value ?: $typeObject->getValue())) {
                 $this->setError(
                     $typeObject->getCode(),
@@ -84,26 +107,26 @@ class Checker
         return true;
     }
 
-    protected function setError($errCode, $errMsg, $errName, $errValue) {
+    private function setError($errCode, $errMsg, $errName, $errValue) {
         $this->errCode = $errCode;
         $this->errMsg = $errMsg;
         $this->errName = $errName;
         $this->errValue = $errValue;
     }
 
-    public function getErrCode() {
+    public function getCode() {
         return $this->errCode;
     }
 
-    public function getErrMsg() {
+    public function getMsg() {
         return $this->errMsg;
     }
 
-    public function getErrName() {
+    public function getName() {
         return $this->errName;
     }
 
-    public function getErrValue() {
+    public function getValue() {
         return $this->errValue;
     }
 }

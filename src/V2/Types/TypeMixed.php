@@ -4,7 +4,7 @@
 namespace Lit\Parameter\V2\Types;
 
 
-class TypeMixed extends TypeCommon
+class TypeMixed extends Common
 {
     protected $valueType = "mixed";
 

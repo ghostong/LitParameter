@@ -4,7 +4,7 @@
 namespace Lit\Parameter\V2\Types;
 
 
-class TypeCommon
+class Common
 {
     protected $name = null;
     protected $value = null;
@@ -34,6 +34,11 @@ class TypeCommon
         $this->setWorkShop(function ($value) {
             return !empty($value);
         });
+        return $this;
+    }
+
+    public function callback($callback) {
+        $this->setWorkShop($callback);
         return $this;
     }
 
