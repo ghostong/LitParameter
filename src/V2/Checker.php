@@ -7,6 +7,7 @@ namespace Lit\Parameter\V2;
 use Lit\Parameter\V2\Types\TypeInteger;
 use Lit\Parameter\V2\Types\TypeMixed;
 use Lit\Parameter\V2\Types\Types;
+use Lit\Parameter\V2\Types\TypeString;
 
 class Checker
 {
@@ -16,6 +17,26 @@ class Checker
     protected $errMsg = "";
     protected $errName = null;
     protected $errValue = null;
+
+    public function check($params = []) {
+        $params = empty($params) ? $this->getAttributes() : $params;
+        foreach ($params as $name => $value) {
+            /**
+             * @var TypeInteger $typeObject
+             */
+            $typeObject = $this->typeCache($name)->getObject();
+            if ($typeObject) {
+                if (!$this->checkValue($typeObject, $value)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public function toArray() {
+        return $this->getAttributes();
+    }
 
     public function __get($name) {
         return $this->typeCache($name);
@@ -40,26 +61,10 @@ class Checker
         return $tmp;
     }
 
-    public function check($params = []) {
-        $params = empty($params) ? $this->getAttributes() : $params;
-        foreach ($params as $name => $value) {
-            /**
-             * @var TypeInteger $typeObject
-             */
-            $typeObject = $this->typeCache($name)->getObject();
-            if ($typeObject) {
-                if (!$this->checkValue($typeObject, $value)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
     /**
      *
      * @date 2023/3/3
-     * @param TypeInteger|TypeMixed $typeObject
+     * @param TypeInteger|TypeString|TypeMixed $typeObject
      * @param null $value
      * @return bool
      * @author litong

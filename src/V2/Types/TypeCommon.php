@@ -16,6 +16,27 @@ class TypeCommon
 
     protected $workShop = [];
 
+    public function in($array) {
+        $this->setWorkShop(function ($value) use ($array) {
+            return in_array($value, $array);
+        });
+        return $this;
+    }
+
+    public function notNull() {
+        $this->setWorkShop(function ($value) {
+            return null !== $value;;
+        });
+        return $this;
+    }
+
+    public function notEmpty() {
+        $this->setWorkShop(function ($value) {
+            return !empty($value);
+        });
+        return $this;
+    }
+
     public function defaultValue($value) {
         $this->defaultValue = $value;
         return $this;

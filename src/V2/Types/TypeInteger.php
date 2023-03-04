@@ -30,4 +30,11 @@ class TypeInteger extends TypeCommon
         return $this;
     }
 
+    public function between($num1, $num2) {
+        $this->setWorkShop(function ($value) use ($num1, $num2) {
+            return $value >= $num1 && $value <= $num2;
+        });
+        return $this;
+    }
+
 }

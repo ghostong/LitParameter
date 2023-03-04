@@ -19,6 +19,11 @@ class Types
         return $this->typeObject;
     }
 
+    public function string() {
+        $this->typeObject = new TypeString($this->name);
+        return $this->typeObject;
+    }
+
     public function getObject() {
         if (!$this->typeObject) {
             $this->typeObject = new TypeMixed($this->name);
