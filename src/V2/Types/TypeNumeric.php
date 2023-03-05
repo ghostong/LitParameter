@@ -10,7 +10,7 @@ class TypeNumeric extends CommonNumeric
 
     public function __construct($name) {
         $this->name = $name;
-        $this->setWorkShop(function ($value) {
+        $this->setWorkShop($this->valueType, function ($value) {
             return is_numeric($value);
         });
         return $this;

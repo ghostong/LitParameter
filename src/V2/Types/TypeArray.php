@@ -10,7 +10,7 @@ class TypeArray extends Common
 
     public function __construct($name) {
         $this->name = $name;
-        $this->setWorkShop(function ($value) {
+        $this->setWorkShop($this->valueType, function ($value) {
             return is_array($value);
         });
         return $this;
@@ -24,7 +24,7 @@ class TypeArray extends Common
      * @author litong
      */
     public function minSize($size) {
-        $this->setWorkShop(function ($value) use ($size) {
+        $this->setWorkShop(__FUNCTION__, function ($value) use ($size) {
             return count($value) >= $size;
         });
         return $this;
@@ -38,7 +38,7 @@ class TypeArray extends Common
      * @author litong
      */
     public function maxSize($size) {
-        $this->setWorkShop(function ($value) use ($size) {
+        $this->setWorkShop(__FUNCTION__, function ($value) use ($size) {
             return count($value) <= $size;
         });
         return $this;
@@ -52,7 +52,7 @@ class TypeArray extends Common
      * @author litong
      */
     public function incFields($fields) {
-        $this->setWorkShop(function ($value) use ($fields) {
+        $this->setWorkShop(__FUNCTION__, function ($value) use ($fields) {
             return empty(array_diff_key(array_flip($fields), $value));
         });
         return $this;
@@ -66,7 +66,7 @@ class TypeArray extends Common
      * @author litong
      */
     public function excFields($fields) {
-        $this->setWorkShop(function ($value) use ($fields) {
+        $this->setWorkShop(__FUNCTION__, function ($value) use ($fields) {
             return !empty(array_diff_key(array_flip($fields), $value));
         });
         return $this;

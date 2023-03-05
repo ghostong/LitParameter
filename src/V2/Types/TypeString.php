@@ -10,7 +10,7 @@ class TypeString extends Common
 
     public function __construct($name) {
         $this->name = $name;
-        $this->setWorkShop(function ($value) {
+        $this->setWorkShop($this->valueType, function ($value) {
             return is_string($value);
         });
         return $this;
@@ -24,7 +24,7 @@ class TypeString extends Common
      * @author litong
      */
     public function minLength($length) {
-        $this->setWorkShop(function ($value) use ($length) {
+        $this->setWorkShop(__FUNCTION__, function ($value) use ($length) {
             return !(strlen($value) < $length);
         });
         return $this;
@@ -38,7 +38,7 @@ class TypeString extends Common
      * @author litong
      */
     public function maxLength($length) {
-        $this->setWorkShop(function ($value) use ($length) {
+        $this->setWorkShop(__FUNCTION__, function ($value) use ($length) {
             return !(strlen($value) > $length);
         });
         return $this;
@@ -52,7 +52,7 @@ class TypeString extends Common
      * @author litong
      */
     public function length($length) {
-        $this->setWorkShop(function ($value) use ($length) {
+        $this->setWorkShop(__FUNCTION__, function ($value) use ($length) {
             return strlen($value) === $length;
         });
         return $this;
