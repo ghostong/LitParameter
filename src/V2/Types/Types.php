@@ -26,13 +26,24 @@ class Types
     }
 
     /**
-     * 数字/值声明
+     * 数字声明
      * @date 2023/3/5
      * @return TypeNumeric
      * @author litong
      */
     public function isNumeric() {
         $this->typeObject = new TypeNumeric($this->name);
+        return $this->typeObject;
+    }
+
+    /**
+     * 浮点声明
+     * @date 2023/3/5
+     * @return TypeFloat
+     * @author litong
+     */
+    public function isFloat() {
+        $this->typeObject = new TypeFloat($this->name);
         return $this->typeObject;
     }
 

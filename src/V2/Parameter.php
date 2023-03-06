@@ -15,6 +15,7 @@ class Parameter
 {
 
     private static $typeCache = [];
+    private static $assignedCache = [];
     private $errCode = 0;
     private $errMsg = '';
     private $errName = '';
@@ -79,7 +80,7 @@ class Parameter
     public function getAssigned() {
         $tmp = [];
         foreach (self::$typeCache as $key => $value) {
-            if (!($value->getOBject()->getType() == "mixed" && is_null($value->getOBject()->getValue()))) {
+            if (in_array($key, self::$assignedCache)) {
                 $tmp[$key] = $value->getOBject()->getValue();
             }
         }
@@ -105,6 +106,7 @@ class Parameter
     }
 
     public function __set($name, $value) {
+        self::$assignedCache[] = $name;
         $this->typeCache($name)->getObject()->setValue($value);
     }
 

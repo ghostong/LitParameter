@@ -1,32 +1,69 @@
-# LitParameter 实参验证器
+# LitParameter 映射验证器
 
 ## 说明
 
-实参验证器主要是解决业务中, 验证实参有效性的解决方案.
+映射验证器: 是解决业务中数据映射与参数验证有效性的解决方案.
+
+## 旧版本
+
+V1 实参验证器 [参考文档](README_V1.md)
+
+此文档为最新版本文档.
 
 ## 初始化
 
 ````php
-class ParamChecker extends \Lit\Parameter\Checker
+/**
+ * @property Types $name
+ * @property Types $age
+ * @property Types $height
+ * @property Types $gender
+ * @property Types $title
+ * @property Types $description
+ * @property Types $children
+ * @property Types $city
+ * @property Types $number
+ * @property Types $data
+ */
+class AbcMapper extends \Lit\Parameter\V2\Parameter
 {
 
-    public function __construct() {
-        
-        //初始化一个字符串类型形参 bookName, 非空, 非null, 最小长度3, 最大长度9. 如果验证失败, 错误代码: 1007, 错误信息: 书籍名称错误
-        $this->isString("bookName")->notEmpty()->notNull()->minLength(3)->maxLength(9)->setCode(1007)->setMsg("书籍名称错误");
-        
-        //初始化一个整型类型形参 bookId, 非空, 非null,介于5-10之间 . 如果验证失败, 错误代码: 1008, 错误信息: 书籍ID错误
-        $this->isNumber("bookId")->notNull()->between(5, 10)->setCode(1008)->setMsg("书籍ID错误");
-        
-        //初始化一个数组类型形参 bookTags, 非空, 非null, 数组最小元素数2, 最大元素数5, 必须包含id,name两个字段, 不能包含bug1,bug2两个字段 . 如果验证失败, 错误代码: 1009, 错误信息: tags错误
-        $this->isArray("bookTags")->notNull()->notEmpty()->minSize(2)->maxSize(5)->incFields(["id", "name"])->excFields(["bug1", "bug2"])->setCode(1009)->setMsg("tags错误");
-        
-        //初始化一个字符串类型形参, 使用回调函数验证参数正确性, 如果验证失败, 错误代码: 1010, 错误信息: tags错误
-        $this->isString("bookDesc")->callback(function ($desc) {
-            return strlen($desc) == 1;
-        })->setCode(1010)->setMsg("desc 错误");
-        //初始化一个数字或数字字符串
-        $this->isNumeric("book_id")->in([1, 2, "1", "2"]);
+    public function __construct($params = []) {
+
+        //声明一个属性 age, 整型, 介于12值18之间, 如果验证出错, 错误代码: 10001, 错误信息: 年龄错误 (下同)
+        $this->age->isInteger()->between(12, 18)->setCode(10001)->setMsg("年龄错误");
+
+        //声明一个属性 height, 整型, 大于120, 小于180
+        $this->height->isInteger()->ge(120)->le(180)->setCode(10002)->setMsg("身高错误");
+
+        //声明一个属性 name, 字符串, 最小长度3, 最大长度32
+        $this->name->isString()->minLength(3)->maxLength(32)->setCode(10003)->setMsg("名称错误");
+
+        //声明一个属性 gender, 字符串, 枚举: m, f
+        $this->gender->isString()->in(["m", "f"])->setCode(10004)->setMsg("性别错误");
+
+        //声明一个属性 title, 字符串, 长度为5
+        $this->title->isString()->length(5)->notEmpty()->setCode(10005)->setMsg("标题错误");
+
+        //声明一个属性 description, 字符串, 不为 null
+        $this->description->isString()->notNull()->setCode(10006)->setMsg("描述错误");
+
+        //声明一个属性 children, 数组, 元素数最小2个, 最大3个
+        $this->children->isArray()->minSize(2)->maxSize(3)->setCode(10007)->setMsg("子集错误");
+
+        //声明一个属性 city, 字符串, 无赋值时默认为
+        $this->city->isString()->setDefault("zz")->setCode(10008)->setMsg("城市错误");
+
+        //声明一个属性 number, 数值, 使用回调函数自行验证
+        $this->number->isNumeric()->callback(function ($number) {
+            return $number > 999;
+        })->setCode(10009)->setMsg("编号错误");
+
+        //声明一个属性 data, 数组, 数组的键不能包含 aa, bb , 数组的键必须包含 cc, dd
+        $this->data->isArray()->excFields(["aa", "bb"])->incFields(["cc", "dd"])->setCode(10010)->setMsg("数据集错误");
+
+        //启用快速赋值(非必须)
+        parent::__construct($params);
     }
 
 }
@@ -36,36 +73,60 @@ class ParamChecker extends \Lit\Parameter\Checker
 
 ### 使用验证器
 
-#### 验证一个数组
+#### 映射器赋值
 
 ````php
-ParamChecker::check($param, $must) : array
- - $param 验证的参数数组
- - $must  指定必填参数(选填)
+//赋值
+$abcMapper = new AbcMapper();
+$abcMapper->age = 12;
+$abcMapper->height = 180;
+$abcMapper->name = "good boy";
+$abcMapper->gender = "f";
+$abcMapper->title = "title";
+$abcMapper->description = "";
+$abcMapper->children = ["a", "b", "c"];
+$abcMapper->number = 9990;
+$abcMapper->data = ["cc" => 11, "dd" => 22, "ee" => 33];
+
+//快速赋值 (需在映射器中调用父类构造函数)
+$abcMapper = new AbcMapper(["age"=>12, "name" =>"good boy"]);
 ````
 
-#### 如果失败获取上一步设置的错误代码
+#### 获取已赋值属性的值
 
 ````php
-ParamChecker::getCode(): int
+var_dump($abcMapper->name->value());
+var_dump($abcMapper->age->value());
 ````
 
-#### 获取上一步(设置)的验证失败代码
+#### 获取批量获取属性的值
 
 ````php
-ParamChecker::getMsg(): string
+//已赋值的属性
+var_dump($abcMapper->getAssigned());
+//所有属性
+var_dump($abcMapper->toArray());
 ````
 
-#### 获取上一步(设置)的验证失败信息
+#### 指定必填参数并验证
 
 ````php
-ParamChecker::getMsg(): string
+var_dump($abcMapper->must(["age", "name"])->check());
 ````
 
-#### 获取上一步(设置)的验证失败调试信息
+#### 验证失败的调试方法
 
 ````php
-ParamChecker::debug(): array
+//错误码
+$abcMapper->errCode();
+//错误码
+$abcMapper->errMsg();
+//错误的属性名称
+$abcMapper->errName();
+//错误属性的值
+$abcMapper->errValue();
+//出错的验证条件
+$abcMapper->errCondition();
 ````
 
 ### 示例
@@ -74,11 +135,17 @@ ParamChecker::debug(): array
 
 ````php
 //验证一个数组是否符合规范, 保证要验证的形参已经编写过规则. (参考初始化)
-$array = ["bookTags"=>"tag","bookDesc"=>"desc"];
-if (ParamChecker::check($array,["bookId"])) { //如果验证失败
+$array = ["title"=>"title","description"=>"description"];
+if ($abcMapper->must(["age"])->check($array)) { //如果验证失败
     var_dump("验证成功");
 }else{
-    var_dump(ParamChecker::getCode(),ParamChecker::getMsg(),ParamChecker::debug()); //错误信息    
+    var_export([
+        "errCode" => $abcMapper->errCode(),
+        "errMsg" => $abcMapper->errMsg(),
+        "errName" => $abcMapper->errName(),
+        "errValue" => $abcMapper->errValue(),
+        "errCondition" => $abcMapper->errCondition()
+    ]);//调试信息
 }
 ````
 
@@ -87,8 +154,14 @@ if (ParamChecker::check($array,["bookId"])) { //如果验证失败
 ````php
 //验证函数或者类方法, 保证要验证的形参已经编写过规则. (参考初始化)
 function test($bookId, $bookName, $bookTags, $bookDesc) {
-    if (!ParamChecker::check(get_defined_vars())) { //如果验证失败
-        var_dump(ParamChecker::getCode(),ParamChecker::getMsg(),ParamChecker::debug()); //调试信息
+    if (!$abcMapper->check(get_defined_vars())) { //如果验证失败
+        var_export([
+            "errCode" => $abcMapper->errCode(),
+            "errMsg" => $abcMapper->errMsg(),
+            "errName" => $abcMapper->errName(),
+            "errValue" => $abcMapper->errValue(),
+            "errCondition" => $abcMapper->errCondition()
+        ]);//调试信息
         return false;
     }
     //正常业务逻辑
@@ -102,15 +175,17 @@ test(1234,"abcd",["id"=>890,"name"=>"xyz","target"=>"abc","bug1"=>"bug1"],"opqrs
 ## 支持方法
 
 |    方法    |           说明         |
-| :---:     |          :---:        |
-| isString()| 初始化一个字符串类型参数验证|
-| isNumber()| 初始化一个整型类型参数验证 |
-| isArray() | 初始化一个数组类型参数验证 |
-| isFloat() | 初始化一个浮点类型参数验证 |
-| getCode() | 获取验证错误代码 |
-| getMsg()  | 获取验证错误信息 |
-| debug()   | 获取错误调试信息 |
-|getChecker()| |
+| :---:      |          :---:        |
+| isString() | 初始化一个字符串类型参数验证|
+| isNumber() | 初始化一个整型类型参数验证 |
+| isNumeric()| 初始化一个数值类型参数验证 |
+| isArray()  | 初始化一个数组类型参数验证 |
+| isFloat()  | 初始化一个浮点类型参数验证 |
+| errCode()  | 获取验证错误代码 |
+| errMsg()   | 获取验证错误信息 |
+| errName()   | 获取错误的属性名称 |
+| errValue()    | 获取错误属性的值 |
+|errCondition()| 出错的验证条件 |
 
 ## 方法列表
 
@@ -134,4 +209,3 @@ test(1234,"abcd",["id"=>890,"name"=>"xyz","target"=>"abc","bug1"=>"bug1"],"opqrs
 |excFields() |    ❌️    |   ❌️  |   ✔️   |   ❌️  | 必须排除某些键 |
 | setCode()  |    ✔️    |   ✔️  |   ✔️   |   ✔️  | 设置验证错误代码 |
 | setMsg()   |    ✔️    |   ✔️  |   ✔️   |   ✔️  | 设置验证错误信息 |
-|getChecker()|    ✔️    |   ✔️  |   ✔️   |   ✔️  | 获取所有验证信息 |
