@@ -111,7 +111,7 @@ class Parameter
     }
 
     private function typeCache($name) {
-        if (!(self::$typeCache[$name] instanceof Types)) {
+        if (!isset(self::$typeCache[$name]) || !(self::$typeCache[$name] instanceof Types)) {
             self::$typeCache[$name] = new Types($name);
         }
         return self::$typeCache[$name];
@@ -180,7 +180,7 @@ class Parameter
     /**
      * 校验错误时, 获取信息
      * @date 2023/3/5
-     * @return int
+     * @return string
      * @author litong
      */
     public function errMsg() {
@@ -190,7 +190,7 @@ class Parameter
     /**
      * 校验错误时, 获取出错的属性名称
      * @date 2023/3/5
-     * @return int
+     * @return string
      * @author litong
      */
     public function errName() {
@@ -200,7 +200,7 @@ class Parameter
     /**
      * 校验错误时, 获取出错属性的值
      * @date 2023/3/5
-     * @return int
+     * @return int|null
      * @author litong
      */
     public function errValue() {
@@ -210,7 +210,7 @@ class Parameter
     /**
      * 校验错误时, 获取未校验通过的条件
      * @date 2023/3/5
-     * @return int
+     * @return string
      * @author litong
      */
     public function errCondition() {
