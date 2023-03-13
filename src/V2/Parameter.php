@@ -5,6 +5,7 @@ namespace Lit\Parameter\V2;
 
 
 use Lit\Parameter\V2\Types\TypeArray;
+use Lit\Parameter\V2\Types\TypeFloat;
 use Lit\Parameter\V2\Types\TypeInteger;
 use Lit\Parameter\V2\Types\TypeMixed;
 use Lit\Parameter\V2\Types\TypeNumeric;
@@ -48,6 +49,7 @@ class Parameter
              * @var TypeString $typeObject
              * @var TypeArray $typeObject
              * @var TypeMixed $typeObject
+             * @var TypeFloat $typeObject
              */
             $typeObject = $this->typeCache($name)->getObject();
             if ($typeObject) {
@@ -80,7 +82,7 @@ class Parameter
     public function getAssigned() {
         $tmp = [];
         foreach (self::$typeCache as $key => $value) {
-            if (in_array($key, self::$assignedCache)) {
+            if (in_array($key, self::$assignedCache) && $value->getOBject()->getType() !== "mixed") {
                 $tmp[$key] = $value->getOBject()->getValue();
             }
         }
@@ -96,7 +98,9 @@ class Parameter
     public function toArray() {
         $tmp = [];
         foreach (self::$typeCache as $key => $value) {
-            $tmp[$key] = $value->getOBject()->getValue();
+            if ($value->getOBject()->getType() !== "mixed") {
+                $tmp[$key] = $value->getOBject()->getValue();
+            }
         }
         return $tmp;
     }
