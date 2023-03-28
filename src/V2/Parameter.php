@@ -33,7 +33,7 @@ class Parameter
     /**
      * 参数校验
      * @date 2023/3/5
-     * @param array $params
+     * @param array $params 要验证的参数
      * @return bool
      * @author litong
      */
@@ -157,7 +157,7 @@ class Parameter
                 "参数为必填参数!",
                 $typeObject->getName(),
                 "must",
-                $params[$key]
+                isset($params[$key]) ?: null
             );
             return false;
         }
