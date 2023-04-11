@@ -1,6 +1,6 @@
 {
   "name": "lit/parameter",
-  "description": "函数参数验证器",
+  "description": "数据结构映射验证器",
   "authors": [
     {
       "name": "litong",
