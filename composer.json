@@ -1,6 +1,7 @@
 {
   "name": "lit/parameter",
   "description": "数据结构映射验证器",
+  "license": "MIT",
   "authors": [
     {
       "name": "litong",
