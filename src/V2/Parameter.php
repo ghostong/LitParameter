@@ -15,8 +15,8 @@ use Lit\Parameter\V2\Types\TypeString;
 class Parameter
 {
 
-    private static $typeCache = [];
-    private static $assignedCache = [];
+    private $typeCache = [];
+    private $assignedCache = [];
     private $errCode = 0;
     private $errMsg = '';
     private $errName = '';
@@ -81,8 +81,8 @@ class Parameter
      */
     public function getAssigned() {
         $tmp = [];
-        foreach (self::$typeCache as $key => $value) {
-            if (in_array($key, self::$assignedCache) && $value->getOBject()->getType() !== "mixed") {
+        foreach ($this->typeCache as $key => $value) {
+            if (in_array($key, $this->assignedCache) && $value->getOBject()->getType() !== "mixed") {
                 $tmp[$key] = $value->getOBject()->getValue();
             }
         }
@@ -97,7 +97,7 @@ class Parameter
      */
     public function toArray() {
         $tmp = [];
-        foreach (self::$typeCache as $key => $value) {
+        foreach ($this->typeCache as $key => $value) {
             if ($value->getOBject()->getType() !== "mixed") {
                 $tmp[$key] = $value->getOBject()->getValue();
             }
@@ -110,15 +110,15 @@ class Parameter
     }
 
     public function __set($name, $value) {
-        self::$assignedCache[] = $name;
+        $this->assignedCache[] = $name;
         $this->typeCache($name)->getObject()->setValue($value);
     }
 
     private function typeCache($name) {
-        if (!isset(self::$typeCache[$name]) || !(self::$typeCache[$name] instanceof Types)) {
-            self::$typeCache[$name] = new Types($name);
+        if (!isset($this->typeCache[$name]) || !($this->typeCache[$name] instanceof Types)) {
+            $this->typeCache[$name] = new Types($name);
         }
-        return self::$typeCache[$name];
+        return $this->typeCache[$name];
     }
 
     /**
