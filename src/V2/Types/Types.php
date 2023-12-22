@@ -102,4 +102,25 @@ class Types
         return $this->getObject()->getType();
     }
 
+    /**
+     * 禁止直接 toString
+     * @date 2023/12/22
+     * @return void
+     * @author litong
+     */
+    public function __toString() {
+        $trace = debug_backtrace(0);
+        trigger_error("Use the value() method to read the variable value. in {$trace[0]["file"]} on line {$trace[0]["line"]}  -> ", E_USER_ERROR);
+    }
+
+    /**
+     * 禁止直接 debugInfo
+     * @date 2023/12/22
+     * @return void
+     * @author litong
+     */
+    public function __debugInfo() {
+        $trace = debug_backtrace(1);
+        trigger_error("Use the value() method to read the variable value. in {$trace[1]["file"]} on line {$trace[1]["line"]}  -> ", E_USER_ERROR);
+    }
 }
