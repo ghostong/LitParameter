@@ -21,5 +21,8 @@
     "psr-4": {
       "Lit\\Parameter\\": "src"
     }
-  }
+  },
+  "bin": [
+    "bin/MapperHelperWithDDL.php"
+  ]
 }
