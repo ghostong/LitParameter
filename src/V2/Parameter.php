@@ -159,7 +159,7 @@ class Parameter
             $typeObject = $this->typeCache($key)->getObject();
             $this->setError(
                 10000,
-                "参数为必填参数!",
+                sprintf("参数(%s)为必填参数!", $typeObject->getName()),
                 $typeObject->getName(),
                 "must",
                 isset($params[$key]) ?: null
