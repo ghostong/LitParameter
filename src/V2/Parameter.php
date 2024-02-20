@@ -24,6 +24,11 @@ class Parameter
     private $errCondition = '';
     private $mustFields = [];
 
+    //是否使用默认报错
+    protected $defaultError = false;
+    protected $defaultErrorCode = 77777;
+    protected $defaultErrorMsg = '参数错误(%s)';
+
     public function __construct($params = []) {
         foreach ($params as $key => $value) {
             $this->$key = $value;
@@ -164,11 +169,27 @@ class Parameter
     }
 
     private function setError($errCode, $errMsg, $errName, $condition, $errValue) {
-        $this->errCode = $errCode;
-        $this->errMsg = $errMsg;
+        $this->errCode = $errCode == 0 && $this->defaultError == true ? $this->defaultErrorCode : $errCode;
+        $this->errMsg = $errMsg == '' && $this->defaultError == true ? sprintf($this->defaultErrorMsg, $errName) : $errMsg;
         $this->errName = $errName;
         $this->errValue = $errValue;
         $this->errCondition = $condition;
+    }
+
+    /**
+     * 获取所有错误提示
+     * @date 2024/2/20
+     * @return array
+     * @author litong
+     */
+    public function errAll() {
+        return [
+            'errCode' => $this->errCode,
+            'errMsg' => $this->errMsg,
+            'errName' => $this->errName,
+            'errValue' => $this->errValue,
+            'errCondition' => $this->errCondition,
+        ];
     }
 
     /**

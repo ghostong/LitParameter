@@ -24,9 +24,16 @@ V1 实参验证器 [参考文档](README_V1.md)
  * @property Types $city
  * @property Types $number
  * @property Types $data
+ * @property Types $create_time
  */
 class AbcMapper extends \Lit\Parameter\V2\Parameter
 {
+    //是否使用默认错误, 开启此选项后, 不调用setCode(), setMsg() 即使用默认错误码和错误信息
+    protected $defaultError = true;
+    //默认错误码 默认值: 77777 可自定义
+    protected $defaultErrorCode = '390';
+    //默认错误信息 默认值: 参数错误(%s), %s 会被替换为 参数名成
+    protected $defaultErrorMsg = '参数错误了';
 
     public function __construct($params = []) {
 
@@ -61,6 +68,8 @@ class AbcMapper extends \Lit\Parameter\V2\Parameter
 
         //声明一个属性 data, 数组, 数组的键不能包含 aa, bb , 数组的键必须包含 cc, dd
         $this->data->isArray()->excFields(["aa", "bb"])->incFields(["cc", "dd"])->setCode(10010)->setMsg("数据集错误");
+        
+        $this->create_time->isDateTime()->formatIs('Y-m-d H');
 
         //启用快速赋值(非必须)
         parent::__construct($params);

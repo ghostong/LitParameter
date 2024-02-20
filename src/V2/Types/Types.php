@@ -70,9 +70,20 @@ class Types
     }
 
     /**
+     * 日期时间声明
+     * @date 2024/02/20
+     * @return TypeDateTime
+     * @author litong
+     */
+    public function isDateTime() {
+        $this->typeObject = new TypeDateTime($this->name);
+        return $this->typeObject;
+    }
+
+    /**
      * 获取属性声明类型
      * @date 2023/3/5
-     * @return TypeMixed|TypeInteger|TypeNumeric|TypeArray|TypeString
+     * @return TypeMixed|TypeInteger|TypeNumeric|TypeArray|TypeString|TypeDateTime
      * @author litong
      */
     public function getObject() {
