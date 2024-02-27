@@ -45,7 +45,7 @@ function makeMapper($fields) {
     $mapper[] = '';
     $mapper[] = '/**';
     foreach ($fields as $field => $type) {
-        $mapper[] = " * @property Types \${$field};";
+        $mapper[] = " * @property Types \${$field}";
     }
     $mapper[] = ' */';
     $mapper[] = '';
@@ -55,7 +55,7 @@ function makeMapper($fields) {
     $mapper[] = '    //protected $defaultErrorMsg = \'参数有错误, 请更正!\';';
     $mapper[] = '    //protected $defaultErrorCode = \'10068\';';
     $mapper[] = '';
-    $mapper[] = '    public function __construct($params) {';
+    $mapper[] = '    public function __construct($params = []) {';
     foreach ($fields as $field => $type) {
         $mapper[] = "        \$this->{$field}->" . getIsType($type) . "();";
     }
