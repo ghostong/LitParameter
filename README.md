@@ -115,6 +115,8 @@ var_dump($abcMapper->age->value());
 var_dump($abcMapper->getAssigned());
 //所有属性
 var_dump($abcMapper->toArray());
+//是否为空
+var_dump($abcMapper->isEmpty());
 ````
 
 #### 指定必填参数并验证

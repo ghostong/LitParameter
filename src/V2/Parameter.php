@@ -79,6 +79,16 @@ class Parameter
     }
 
     /**
+     * 判断是否为空
+     * @date 2024/4/8
+     * @return bool
+     * @author litong
+     */
+    public function isEmpty(){
+        return empty($this->assignedCache);
+    }
+
+    /**
      * 获取已赋值的属性
      * @date 2023/3/5
      * @return array
