@@ -28,6 +28,7 @@ class Parameter
     protected $defaultError = false;
     protected $defaultErrorCode = 77777;
     protected $defaultErrorMsg = '参数错误(%s)';
+    protected $defaultMustParamErrorCode = 10000;
 
     public function __construct($params = []) {
         foreach ($params as $key => $value) {
@@ -84,7 +85,7 @@ class Parameter
      * @return bool
      * @author litong
      */
-    public function isEmpty(){
+    public function isEmpty() {
         return empty($this->assignedCache);
     }
 
@@ -168,7 +169,7 @@ class Parameter
             $key = current(array_keys($diffKey));
             $typeObject = $this->typeCache($key)->getObject();
             $this->setError(
-                10000,
+                $this->defaultMustParamErrorCode,
                 sprintf("参数(%s)为必填参数!", $typeObject->getName()),
                 $typeObject->getName(),
                 "must",
