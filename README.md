@@ -140,6 +140,12 @@ $abcMapper->errValue();
 $abcMapper->errCondition();
 ````
 
+#### 开启错误位置调试
+
+````php
+ParamChecker::debugOn();
+````
+
 ### 示例
 
 #### 验证一个数组的有效性

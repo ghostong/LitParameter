@@ -23,6 +23,6 @@
     }
   },
   "bin": [
-    "bin/MapperHelperWithDDL.php"
+    "bin/MapperWithDDL.php"
   ]
 }

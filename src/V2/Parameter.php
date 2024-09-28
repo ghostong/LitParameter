@@ -166,11 +166,17 @@ class Parameter
         if (empty($diffKey)) {
             return true;
         } else {
+            $debug = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
+            if (isset($debug[1]['file']) && defined('LIT_PARAMETER_DEBUG')) {
+                $debugMsg = " @" . $debug[1]['file'] . ":" . $debug[1]['line'];
+            } else {
+                $debugMsg = "";
+            }
             $key = current(array_keys($diffKey));
             $typeObject = $this->typeCache($key)->getObject();
             $this->setError(
                 $this->defaultMustParamErrorCode,
-                sprintf("参数(%s)为必填参数!", $typeObject->getName()),
+                sprintf("参数(%s)为必填参数!%s", $typeObject->getName(), $debugMsg),
                 $typeObject->getName(),
                 "must",
                 isset($params[$key]) ?: null
@@ -251,5 +257,9 @@ class Parameter
      */
     public function errCondition() {
         return $this->errCondition;
+    }
+
+    public static function debugOn() {
+        define('LIT_PARAMETER_DEBUG', true);
     }
 }
