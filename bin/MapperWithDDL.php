@@ -2,6 +2,7 @@
 <?php
 
 $sqlFile = "./.mapperDdlFile.sql";
+
 if (!is_file($sqlFile)) {
     $answer = ask("[ {$sqlFile} ] 不存在(Y创建/N退出)");
     if ($answer != 'y') {
@@ -22,7 +23,8 @@ if (empty(trim($sql))) {
     if (empty($fields)) {
         exit("[ {$sqlFile} ] ddl 解析错误, 退出\n");
     }
-    echo "\n", makeMapper($fields), "\n\n\n";
+    $tableName = getTableName($sql);
+    echo "\n", makeMapper($fields, $tableName), "\n\n\n";
 
     $answer = ask("生成完毕, 是否删除文件[ {$sqlFile} ](Y删除/N不删除)");
     if ($answer == 'y') {
@@ -32,13 +34,17 @@ if (empty(trim($sql))) {
     }
 }
 
-function ask($ask) {
+function ask($ask)
+{
     echo $ask, "\n";
     $handle = fopen("php://stdin", "r");
     return strtolower(trim(fgets($handle)));
 }
 
-function makeMapper($fields) {
+function makeMapper($fields, $tableName = '')
+{
+    $className = $tableName ? toCamelCase($tableName) . 'Mapper' : 'ParamChecker';
+
     $mapper[] = '<?php';
     $mapper[] = 'use Lit\Parameter\V2\Parameter;';
     $mapper[] = 'use Lit\Parameter\V2\Types\Types;';
@@ -49,7 +55,7 @@ function makeMapper($fields) {
     }
     $mapper[] = ' */';
     $mapper[] = '';
-    $mapper[] = 'class ParamChecker extends Parameter {';
+    $mapper[] = 'class ' . $className . ' extends Parameter {';
     $mapper[] = '';
     $mapper[] = '    protected $defaultError = true;';
     $mapper[] = '    //protected $defaultErrorMsg = \'参数有错误, 请更正!\';';
@@ -68,7 +74,8 @@ function makeMapper($fields) {
     return implode("\n", $mapper);
 }
 
-function getIsType($type) {
+function getIsType($type)
+{
     switch (true) {
         case stripos($type, 'char') !== false:
         case stripos($type, 'text') !== false:
@@ -86,7 +93,8 @@ function getIsType($type) {
     }
 }
 
-function getFields($sql) {
+function getFields($sql)
+{
     $fields = array();
     $sql = substr($sql, strpos($sql, '(') + 1, strrpos($sql, ')') - strpos($sql, '(') - 1);
     $segments = explode(',', $sql);
@@ -97,4 +105,21 @@ function getFields($sql) {
         }
     }
     return $fields;
+}
+
+function getTableName($sql)
+{
+    if (preg_match('/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?[`"]?(\w+)[`"]?/i', $sql, $matches)) {
+        return $matches[1];
+    }
+    return '';
+}
+
+function toCamelCase($str)
+{
+    return ucfirst(
+        preg_replace_callback('/_+([0-9,a-z])/', function ($matches) {
+            return strtoupper($matches[1]);
+        }, $str)
+    );
 }
