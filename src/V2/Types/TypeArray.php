@@ -6,7 +6,7 @@ namespace Lit\Parameter\V2\Types;
 
 class TypeArray extends Common
 {
-    protected $valueType = "numeric";
+    protected $valueType = "array";
 
     public function __construct($name) {
         $this->name = $name;
