@@ -144,16 +144,17 @@ class Parameter
      * @return bool
      */
     private function checkValue($typeObject, $value = null) {
+        $actualValue = func_num_args() >= 2 ? $value : $typeObject->getValue();
         foreach ($typeObject->getWorkShop() as $worker) {
             $callable = $worker["callable"];
             $condition = $worker["condition"];
-            if (!call_user_func($callable, $value ?: $typeObject->getValue())) {
+            if (!call_user_func($callable, $actualValue)) {
                 $this->setError(
                     $typeObject->getCode(),
                     $typeObject->getMsg(),
                     $typeObject->getName(),
                     $condition,
-                    $value ?: $typeObject->getValue()
+                    $actualValue
                 );
                 return false;
             }
