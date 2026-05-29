@@ -39,12 +39,12 @@ class Parameter
     /**
      * 参数校验
      * @date 2023/3/5
-     * @param array $params 要验证的参数
+     * @param array|null $params 要验证的参数
      * @return bool
      * @author litong
      */
-    public function check($params = []) {
-        $params = empty($params) ? $this->getAssigned() : $params;
+    public function check($params = null) {
+        $params = is_null($params) ? $this->getAssigned() : $params;
         if (!$this->checkMustFields($params)) {
             return false;
         }
