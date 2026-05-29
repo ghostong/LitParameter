@@ -67,7 +67,7 @@ class TypeArray extends Common
      */
     public function excFields($fields) {
         $this->setWorkShop(__FUNCTION__, function ($value) use ($fields) {
-            return !empty(array_diff_key(array_flip($fields), $value));
+            return empty(array_intersect_key($value, array_flip($fields)));
         });
         return $this;
     }
