@@ -14,7 +14,8 @@ class CommonNumeric extends Common
      * @return CommonNumeric
      * @author litong
      */
-    public function gt($num) {
+    public function gt($num)
+    {
         $this->setWorkShop(__FUNCTION__, function ($value) use ($num) {
             return $value > $num;
         });
@@ -28,7 +29,8 @@ class CommonNumeric extends Common
      * @return CommonNumeric
      * @author litong
      */
-    public function lt($num) {
+    public function lt($num)
+    {
         $this->setWorkShop(__FUNCTION__, function ($value) use ($num) {
             return $value < $num;
         });
@@ -42,7 +44,8 @@ class CommonNumeric extends Common
      * @return CommonNumeric
      * @author litong
      */
-    public function ge($num) {
+    public function ge($num)
+    {
         $this->setWorkShop(__FUNCTION__, function ($value) use ($num) {
             return $value >= $num;
         });
@@ -57,7 +60,8 @@ class CommonNumeric extends Common
      * @return CommonNumeric
      * @author litong
      */
-    public function le($num) {
+    public function le($num)
+    {
         $this->setWorkShop(__FUNCTION__, function ($value) use ($num) {
             return $value <= $num;
         });
@@ -72,9 +76,24 @@ class CommonNumeric extends Common
      * @return CommonNumeric
      * @author litong
      */
-    public function between($num1, $num2) {
+    public function between($num1, $num2)
+    {
         $this->setWorkShop(__FUNCTION__, function ($value) use ($num1, $num2) {
             return $value >= $num1 && $value <= $num2;
+        });
+        return $this;
+    }
+
+    /**
+     * 验证时间戳
+     * @date 2023/3/5
+     * @return CommonNumeric
+     * @author litong
+     */
+    public function pastTsFormat()
+    {
+        $this->setWorkShop(__FUNCTION__, function ($value) {
+            return is_numeric($value) && intval($value) > 0 && intval($value) <= time();
         });
         return $this;
     }
