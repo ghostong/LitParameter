@@ -30,7 +30,8 @@ class Parameter
     protected $defaultErrorMsg = '参数错误(%s)';
     protected $defaultMustParamErrorCode = 10000;
 
-    public function __construct($params = []) {
+    public function __construct($params = [])
+    {
         foreach ($params as $key => $value) {
             $this->$key = $value;
         }
@@ -43,7 +44,8 @@ class Parameter
      * @return bool
      * @author litong
      */
-    public function check($params = null) {
+    public function check($params = null)
+    {
         $this->clearError();
         $params = is_null($params) ? $this->getAssigned() : $params;
         if (!$this->checkMustFields($params)) {
@@ -75,7 +77,8 @@ class Parameter
      * @return Parameter
      * @author litong
      */
-    public function must($must = []) {
+    public function must($must = [])
+    {
         $this->mustFields = $must;
         return $this;
     }
@@ -86,7 +89,8 @@ class Parameter
      * @return bool
      * @author litong
      */
-    public function isEmpty() {
+    public function isEmpty()
+    {
         return empty($this->assignedCache);
     }
 
@@ -96,7 +100,8 @@ class Parameter
      * @return array
      * @author litong
      */
-    public function getAssigned() {
+    public function getAssigned()
+    {
         $tmp = [];
         foreach ($this->typeCache as $key => $value) {
             if (in_array($key, $this->assignedCache) && $value->getOBject()->getType() !== "mixed") {
@@ -112,7 +117,8 @@ class Parameter
      * @return array
      * @author litong
      */
-    public function toArray() {
+    public function toArray()
+    {
         $tmp = [];
         foreach ($this->typeCache as $key => $value) {
             if ($value->getOBject()->getType() !== "mixed") {
@@ -122,16 +128,65 @@ class Parameter
         return $tmp;
     }
 
-    public function __get($name) {
+    /**
+     * 获取所有已声明属性的类型、约束和错误信息
+     * @date 2026/6/16
+     * @return array
+     * @author litong
+     */
+    public function getRules()
+    {
+        $tmp = [];
+        foreach ($this->typeCache as $key => $value) {
+            $typeObject = $value->getObject();
+            if ($typeObject->getType() === "mixed") {
+                continue;
+            }
+            $rules = [];
+            $summary = [$typeObject->getName() . ": " . $typeObject->getType()];
+            foreach ($typeObject->getWorkShop() as $k => $worker) {
+                if ($k == 0) {
+                    continue;
+                }
+                $args = $worker["callable"] instanceof \Closure ? (new \ReflectionFunction($worker["callable"]))->getStaticVariables() : [];
+                $rules[] = [
+                    "condition" => $worker["condition"],
+                    "args" => $args
+                ];
+                $summary[] = empty($args) ? $worker["condition"] : $worker["condition"] . "(" . json_encode($args, JSON_UNESCAPED_UNICODE) . ")";
+            }
+            $errorCode = $typeObject->getCode();
+            $errorMsg = $typeObject->getMsg();
+            if ($this->defaultError === true) {
+                $errorCode = $errorCode == 0 ? $this->defaultErrorCode : $errorCode;
+                $errorMsg = $errorMsg == '' ? sprintf($this->defaultErrorMsg, $typeObject->getName()) : $errorMsg;
+            }
+            $errorCode != 0 && $summary[] = "errorCode=" . $errorCode;
+            $errorMsg !== '' && $summary[] = "errorMsg=" . $errorMsg;
+            $tmp[$key] = [
+                "type" => $typeObject->getType(),
+                "rules" => $rules,
+                "errorCode" => $errorCode,
+                "errorMsg" => $errorMsg,
+                "summary" => implode(", ", $summary)
+            ];
+        }
+        return $tmp;
+    }
+
+    public function __get($name)
+    {
         return $this->typeCache($name);
     }
 
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         $this->assignedCache[] = $name;
         $this->typeCache($name)->getObject()->setValue($value);
     }
 
-    private function typeCache($name) {
+    private function typeCache($name)
+    {
         if (!isset($this->typeCache[$name]) || !($this->typeCache[$name] instanceof Types)) {
             $this->typeCache[$name] = new Types($name);
         }
@@ -144,7 +199,8 @@ class Parameter
      * @param null $value
      * @return bool
      */
-    private function checkValue($typeObject, $value = null) {
+    private function checkValue($typeObject, $value = null)
+    {
         $actualValue = func_num_args() >= 2 ? $value : $typeObject->getValue();
         foreach ($typeObject->getWorkShop() as $worker) {
             $callable = $worker["callable"];
@@ -163,7 +219,8 @@ class Parameter
         return true;
     }
 
-    private function checkMustFields($params) {
+    private function checkMustFields($params)
+    {
         $diffKey = array_diff_key(array_flip($this->mustFields), $params);
         if (empty($diffKey)) {
             return true;
@@ -187,7 +244,8 @@ class Parameter
         }
     }
 
-    private function setError($errCode, $errMsg, $errName, $condition, $errValue) {
+    private function setError($errCode, $errMsg, $errName, $condition, $errValue)
+    {
         $this->errCode = $errCode == 0 && $this->defaultError == true ? $this->defaultErrorCode : $errCode;
         $this->errMsg = $errMsg == '' && $this->defaultError == true ? sprintf($this->defaultErrorMsg, $errName) : $errMsg;
         $this->errName = $errName;
@@ -195,7 +253,8 @@ class Parameter
         $this->errCondition = $condition;
     }
 
-    private function clearError() {
+    private function clearError()
+    {
         $this->errCode = 0;
         $this->errMsg = '';
         $this->errName = '';
@@ -209,7 +268,8 @@ class Parameter
      * @return array
      * @author litong
      */
-    public function errAll() {
+    public function errAll()
+    {
         return [
             'errCode' => $this->errCode,
             'errMsg' => $this->errMsg,
@@ -225,7 +285,8 @@ class Parameter
      * @return int
      * @author litong
      */
-    public function errCode() {
+    public function errCode()
+    {
         return $this->errCode;
     }
 
@@ -235,7 +296,8 @@ class Parameter
      * @return string
      * @author litong
      */
-    public function errMsg() {
+    public function errMsg()
+    {
         return $this->errMsg;
     }
 
@@ -245,7 +307,8 @@ class Parameter
      * @return string
      * @author litong
      */
-    public function errName() {
+    public function errName()
+    {
         return $this->errName;
     }
 
@@ -255,7 +318,8 @@ class Parameter
      * @return int|null
      * @author litong
      */
-    public function errValue() {
+    public function errValue()
+    {
         return $this->errValue;
     }
 
@@ -265,11 +329,13 @@ class Parameter
      * @return string
      * @author litong
      */
-    public function errCondition() {
+    public function errCondition()
+    {
         return $this->errCondition;
     }
 
-    public static function debugOn() {
+    public static function debugOn()
+    {
         define('LIT_PARAMETER_DEBUG', true);
     }
 }
