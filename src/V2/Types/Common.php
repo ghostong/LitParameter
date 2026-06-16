@@ -25,7 +25,7 @@ class Common
      */
     public function in($array) {
         $this->setWorkShop(__FUNCTION__, function ($value) use ($array) {
-            return in_array($value, $array);
+            return in_array($value, $array, true);
         });
         return $this;
     }

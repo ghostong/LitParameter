@@ -11,7 +11,7 @@ class TypeDateTime extends Common
     public function __construct($name) {
         $this->name = $name;
         $this->setWorkShop($this->valueType, function ($value) {
-            return strtotime($value) > 0;
+            return strtotime($value) !== false;
         });
         return $this;
     }

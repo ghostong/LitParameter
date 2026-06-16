@@ -44,6 +44,7 @@ class Parameter
      * @author litong
      */
     public function check($params = null) {
+        $this->clearError();
         $params = is_null($params) ? $this->getAssigned() : $params;
         if (!$this->checkMustFields($params)) {
             return false;
@@ -192,6 +193,14 @@ class Parameter
         $this->errName = $errName;
         $this->errValue = $errValue;
         $this->errCondition = $condition;
+    }
+
+    private function clearError() {
+        $this->errCode = 0;
+        $this->errMsg = '';
+        $this->errName = '';
+        $this->errValue = null;
+        $this->errCondition = '';
     }
 
     /**
