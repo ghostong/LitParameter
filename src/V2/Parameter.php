@@ -129,6 +129,46 @@ class Parameter
     }
 
     /**
+     * 获取按声明类型格式化后的所有值
+     *
+     * 仅格式化返回值，不修改参数对象中保存的原始值。
+     * numeric 和 datetime 类型没有对应的 PHP 强制转换类型，保持原值。
+     *
+     * @date 2026/6/29
+     * @return array
+     * @author litong
+     */
+    public function format()
+    {
+        $tmp = [];
+        foreach ($this->typeCache as $key => $value) {
+            $typeObject = $value->getObject();
+            $type = $typeObject->getType();
+            if ($type === "mixed") {
+                continue;
+            }
+
+            $formattedValue = $typeObject->getValue();
+            switch ($type) {
+                case "string":
+                    $formattedValue = (string)$formattedValue;
+                    break;
+                case "integer":
+                    $formattedValue = (int)$formattedValue;
+                    break;
+                case "float":
+                    $formattedValue = (float)$formattedValue;
+                    break;
+                case "array":
+                    $formattedValue = (array)$formattedValue;
+                    break;
+            }
+            $tmp[$key] = $formattedValue;
+        }
+        return $tmp;
+    }
+
+    /**
      * 获取所有已声明属性的类型、约束和错误信息
      * @date 2026/6/16
      * @return array

@@ -121,6 +121,9 @@ var_dump($mapper->getAssigned());
 // 读取所有已声明字段
 var_dump($mapper->toArray());
 
+// 赋值后不验证数据, 强制转换类型
+var_dump($mapper->format());
+
 // 判断是否未赋值
 var_dump($mapper->isEmpty());
 ```
